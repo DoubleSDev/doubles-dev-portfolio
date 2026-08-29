@@ -270,7 +270,7 @@ export default function Home() {
                 value={Math.min(currentTime, duration || 0)}
                 disabled={!videoSource}
                 onInput={(event) => {
-                  const time = Number(event.target.value);
+                  const time = Number(event.currentTarget.value);
                   seekTo(time);
                 }}
                 aria-label="กรอวิดีโอ"
