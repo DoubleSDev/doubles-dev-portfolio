@@ -2,20 +2,20 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://nineframe-video-portfolio.godapd059.chatgpt.site'),
-  title: 'DoubleS Dev — Roblox Game Developer',
-  description: 'พอร์ตโฟลิโอนักพัฒนา Roblox เชี่ยวชาญการมองภาพรวมเกม ให้คำปรึกษาการบริหารเกม และเขียน Script ใน Roblox Studio',
+  metadataBase: new URL('https://doublesdev.github.io/doubles-dev-portfolio/'),
+  title: 'DoubleS Dev — Roblox Developer & 3D Artist',
+  description: 'ผลงาน DoubleS Dev: ระบบเกม Roblox, Scripting, โมเดล 3D ตัวละคร ชุดเกราะ อาวุธ และให้คำปรึกษาด้านภาพรวมเกม',
   openGraph: {
     title: 'DoubleS Dev — Roblox Game Developer',
     description: 'Game overview, Roblox scripting, animation, UI and game consulting.',
     type: 'website',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'DoubleS Dev — Roblox Game Developer' }],
+    images: [{ url: 'https://doublesdev.github.io/doubles-dev-portfolio/og.png', width: 1200, height: 630, alt: 'DoubleS Dev — Roblox Game Developer' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'DoubleS Dev — Roblox Game Developer',
     description: 'Game overview, Roblox scripting, animation, UI and game consulting.',
-    images: ['/og.png'],
+    images: ['https://doublesdev.github.io/doubles-dev-portfolio/og.png'],
   },
 };
 

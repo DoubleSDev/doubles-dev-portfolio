@@ -2,6 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+const models = [
+  { title: 'Halloween Throne', category: 'FANTASY PROP', image: './models/halloween-throne.png', description: 'บัลลังก์ธีมฮาโลวีนโทนม่วง–ทอง ประดับฟักทอง แมว และมงกุฎ พร้อมมุมมองด้านหน้าและด้านหลัง', detail: 'Front / Back · Throne & decorations' },
+  { title: 'Void Dragon Armor', category: 'FANTASY ARMOR', image: './models/void-dragon.png', description: 'เกราะแฟนตาซีโทนดำ–ม่วง พร้อมปีกและรายละเอียดคริสตัล', detail: 'Front / Back · Character armor' },
+  { title: 'Crimson Knight', category: 'CHARACTER ARMOR', image: './models/crimson-knight.png', description: 'ชุดเกราะอัศวินโทนแดง พร้อมผ้าคลุมและลวดลายเรืองแสง', detail: 'Front / Back · Armor & cape' },
+  { title: 'Silver Knight', category: 'ARMOR & WEAPON', image: './models/silver-knight.png', description: 'ชุดเกราะโลหะสีเงินและดาบ พร้อมมุมมองด้านหน้าและด้านหลัง', detail: 'Front / Back · Armor & sword' },
+  { title: 'Crystal Fan', category: 'WEAPON DESIGN', image: './models/crystal-fan.png', description: 'อาวุธพัดประดับคริสตัลสีม่วง พร้อมภาพโมเดลและการจัดวาง UV ใน Blender', detail: 'Blender · Model & UV layout' },
+  { title: 'Blue & Gold Character', category: 'CHARACTER DESIGN', image: './models/blue-character.png', description: 'โมเดลตัวละครสไตล์อนิเมะ เสื้อผ้าโทนน้ำเงินและรายละเอียดสีทอง', detail: 'Front / Back · Character outfit' },
+];
+
 const projects = [
   { id: '01', title: 'World & Weather Systems', type: 'Lighting · Weather · Items', year: 'Showcase', tone: 'blue', poster: './posters/world-weather.jpg', video: './videos/world-weather-systems.mp4' },
   { id: '02', title: 'Gameplay Systems', type: 'Fishing · NPC Dialogue', year: 'Showcase', tone: 'orange', poster: './posters/gameplay.jpg', video: './videos/gameplay-systems.mp4' },
@@ -41,6 +50,9 @@ const formatTime = (seconds: number) => {
 };
 
 export default function Home() {
+  const [selectedModel, setSelectedModel] = useState(0);
+  const [activeModel, setActiveModel] = useState<(typeof models)[number] | null>(null);
+  const modelDialogRef = useRef<HTMLDialogElement>(null);
   const [activeProject, setActiveProject] = useState<PortfolioVideo | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -49,6 +61,27 @@ export default function Home() {
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const openProject = (project: PortfolioVideo) => {
+    setCurrentTime(0);
+    setDuration(0);
+    setVideoSource(null);
+    setVideoLoading(true);
+    setVideoError(false);
+    setActiveProject(project);
+  };
+
+  useEffect(() => {
+    if (activeModel) modelDialogRef.current?.showModal();
+    else modelDialogRef.current?.close();
+  }, [activeModel]);
+
+  useEffect(() => {
+    if (!activeModel && !activeProject) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, [activeModel, activeProject]);
+
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => event.key === 'Escape' && setActiveProject(null);
     window.addEventListener('keydown', closeOnEscape);
@@ -56,23 +89,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    setCurrentTime(0);
-    setDuration(0);
-  }, [activeProject]);
-
-  useEffect(() => {
-    if (!activeProject) {
-      setVideoSource(null);
-      setVideoLoading(false);
-      setVideoError(false);
-      return;
-    }
+    if (!activeProject) return;
 
     const controller = new AbortController();
     let objectUrl: string | null = null;
-    setVideoSource(null);
-    setVideoLoading(true);
-    setVideoError(false);
 
     const prepareSeekableVideo = async () => {
       try {
@@ -121,45 +141,72 @@ export default function Home() {
 
   return (
     <main>
-      <nav className="nav shell" aria-label="เมนูหลัก">
-        <a className="brand" href="#top">DOUBLES DEV</a>
+      <nav className="nav" aria-label="เมนูหลัก">
+        <a className="brand" href="#top"><span className="brandSigil">DS</span><span>DoubleS Dev<small>ROBLOX DEVELOPER</small></span></a>
         <div className="navLinks">
+          <a href="#models">3D Models</a>
           <a href="#work">Work</a>
           <a href="#collaborations">Projects</a>
-          <a href="#services">Services</a>
           <a href="#about">About</a>
-          <a href="#contact">Contact</a>
         </div>
+        <a className="navContact" href="#contact">ติดต่อร่วมงาน</a>
       </nav>
 
-      <section className="hero shell" id="top">
-        <div className="heroContent">
-          <p className="eyebrow">ROBLOX DEVELOPER · SCRIPT · GAME CONSULTING</p>
-          <h1>DoubleS<br />Dev</h1>
-          <p className="lead">นักพัฒนา Roblox ที่ถนัดการมอง <em>ภาพรวมของเกม</em> วางทิศทาง และให้คำแนะนำด้านการบริหารเกม พร้อมพัฒนาระบบด้วย Script ใน Roblox Studio</p>
+      <section className="hero" id="top">
+        <img className="cosmicBackdrop" src="./theme/aemeath-starlight.png" alt="" />
+        <div className="heroContent shell">
+          <p className="eyebrow">GAME VISION · SCRIPTING · 3D CREATION</p>
+          <h1>DoubleS <i>Dev</i></h1>
+          <p className="heroSubtitle">จากภาพรวมของเกม<br /><span>สู่โลกที่เล่นได้จริง</span></p>
+          <p className="lead">วางทิศทางเกม พัฒนาระบบด้วย Script<br />และสร้างงาน 3D สำหรับโลกของ Roblox</p>
           <div className="heroActions">
-            <a className="primaryButton" href="#work">ดูผลงาน</a>
-            <a className="ghostButton" href="mailto:godapd059@gamil.com">คุยเรื่องโปรเจกต์ ↗</a>
+            <a className="primaryButton" href="#models">สำรวจงาน 3D</a>
+            <a className="ghostButton" href="#work">ดูระบบเกม</a>
           </div>
         </div>
-        <div className="heroArt" aria-hidden="true">
-          <img className="heroPoster" src="./posters/world-weather.jpg" alt="" />
-          <div className="lightBeam" />
-          <span>NF</span>
-          <small>ROBLOX SHOWREEL / 2026</small>
+        <div className="heroFooter shell"><span className="heroEdition">DOUBLES DEV / PORTFOLIO 2026</span><p>Theme artwork © KURO GAMES<br />ผลงาน DoubleS Dev อยู่ในส่วนด้านล่าง</p><a href="#models">EXPLORE THE WORK</a></div>
+      </section>
+
+      <section className="models shell" id="models">
+        <div className="sectionTitle">
+          <div><p className="eyebrow">01 / THE CREATION ARCHIVE</p><h2>Characters &amp; <i>artifacts.</i></h2></div>
+          <p>โมเดลตัวละคร ชุดเกราะ และอาวุธ<br />รายละเอียดที่ทำให้โลกของเกมมีเอกลักษณ์</p>
         </div>
-        <span className="scrollMark">SCROLL</span>
+        <div className="modelGallery">
+          <article className="galleryMain" aria-live="polite">
+            <button className="galleryVisual" onClick={() => setActiveModel(models[selectedModel])} aria-label={`ดูภาพเต็ม ${models[selectedModel].title}`}>
+              <span className="modelLabel"><span>DOUBLES DEV / ORIGINAL WORK</span><span>{String(selectedModel + 1).padStart(2, '0')} / {String(models.length).padStart(2, '0')}</span></span>
+              <img src={models[selectedModel].image} alt={models[selectedModel].description} loading="lazy" />
+            </button>
+            <div className="galleryDetail">
+              <p className="modelCategory">{models[selectedModel].category}</p>
+              <h3>{models[selectedModel].title}</h3>
+              <p>{models[selectedModel].description}</p>
+              <p className="modelDetail">{models[selectedModel].detail}</p>
+              <button onClick={() => setActiveModel(models[selectedModel])}>ดูภาพเต็ม</button>
+            </div>
+          </article>
+          <div className="modelThumbnails" aria-label="เลือกผลงาน 3D">
+            {models.map((model, index) => (
+              <button className="modelThumb" key={model.title} aria-pressed={selectedModel === index} onClick={() => setSelectedModel(index)}>
+                <img src={model.image} alt="" loading="lazy" />
+                <span>{model.title}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section className="work shell" id="work">
         <div className="sectionTitle">
-          <div><p className="eyebrow">SELECTED WORK</p><h2>Games that work.</h2></div>
+          <div><p className="eyebrow">02 / SCRIPT &amp; GAMEPLAY</p><h2>Systems in <i>motion.</i></h2></div>
+          <p>ระบบเกมที่ลงมือพัฒนา<br />กดดูวิดีโอผลงานแต่ละระบบได้เลย</p>
         </div>
         <div className="projectGrid">
           {projects.map((project) => (
             <article className="project" key={project.id}>
-              <button className={`projectVisual ${project.tone}`} onClick={() => setActiveProject(project)} aria-label={`เล่นวิดีโอ ${project.title}`}>
-                <img className="projectPoster" src={project.poster} alt="" />
+              <button className={`projectVisual ${project.tone}`} onClick={() => openProject(project)} aria-label={`เล่นวิดีโอ ${project.title}`}>
+                <img className="projectPoster" src={project.poster} alt="" loading="lazy" />
                 <span className="projectIndex">{project.id}</span>
                 <span className="play">▶</span>
                 <span className="visualType">{project.type}</span>
@@ -175,30 +222,34 @@ export default function Home() {
 
       <section className="collaborations shell" id="collaborations">
         <div className="sectionTitle">
-          <div><p className="eyebrow">PROJECT COLLABORATIONS</p><h2>Built together.</h2></div>
+          <div><p className="eyebrow">03 / SHARED WORLDS</p><h2>A journey <i>together.</i></h2></div>
           <p>โปรเจกต์ที่กำลังร่วมพัฒนา<br />และผลงานที่เคยเข้าร่วม</p>
         </div>
 
+        <div className="collaborationLayout">
+        <div>
         <div className="currentLabel"><span className="liveDot" /> CURRENT PROJECT</div>
         <article className="currentProject">
-          <button className="currentVisual" onClick={() => setActiveProject(currentCollaboration)} aria-label={`เล่นวิดีโอ ${currentCollaboration.title}`}>
-            <img className="projectPoster" src={currentCollaboration.poster} alt="" />
+          <button className="currentVisual" onClick={() => openProject(currentCollaboration)} aria-label={`เล่นวิดีโอ ${currentCollaboration.title}`}>
+            <img className="projectPoster" src={currentCollaboration.poster} alt="" loading="lazy" />
             <span className="projectIndex">NOW</span>
             <span className="play">▶</span>
             <span className="visualType">CURRENT COLLABORATION</span>
           </button>
           <div className="currentInfo">
             <div><p>กำลังร่วมพัฒนาอยู่ในขณะนี้</p><h3>{currentCollaboration.title}</h3></div>
-            <button onClick={() => setActiveProject(currentCollaboration)}>WATCH TRAILER ↗</button>
+            <button onClick={() => openProject(currentCollaboration)}>ชมตัวอย่างโปรเจกต์</button>
           </div>
         </article>
+        </div>
 
+        <div>
         <div className="pastHeader"><p className="eyebrow">PAST PROJECT · BIZBLOX ADVENTURE</p><span>5 TRAILERS</span></div>
         <div className="collabGrid">
           {pastCollaborations.map((project) => (
             <article className="project" key={`${project.title}-${project.type}`}>
-              <button className={`projectVisual ${project.tone}`} onClick={() => setActiveProject(project)} aria-label={`เล่นวิดีโอ ${project.title} ${project.type}`}>
-                <img className="projectPoster" src={project.poster} alt="" />
+              <button className={`projectVisual ${project.tone}`} onClick={() => openProject(project)} aria-label={`เล่นวิดีโอ ${project.title} ${project.type}`}>
+                <img className="projectPoster" src={project.poster} alt="" loading="lazy" />
                 <span className="projectIndex">{project.id}</span>
                 <span className="play">▶</span>
                 <span className="visualType">{project.type}</span>
@@ -207,21 +258,24 @@ export default function Home() {
             </article>
           ))}
         </div>
+        </div>
+        </div>
       </section>
 
       <section className="services shell" id="services">
-        <p className="eyebrow">WHAT I DO</p>
+        <p className="eyebrow">04 / CAPABILITIES</p>
         <div className="serviceRows">
           <div><span>01</span><h3>Game Overview &amp; Consulting</h3><p>วิเคราะห์ภาพรวม ให้คำแนะนำ และวางแนวทางบริหารเกม</p></div>
           <div><span>02</span><h3>Roblox Scripting</h3><p>เขียนระบบ Gameplay และแก้ปัญหาโค้ดใน Roblox Studio</p></div>
           <div><span>03</span><h3>Animation &amp; UI</h3><p>สร้างอนิเมชันและ UI ที่พร้อมใช้งานจริงในเกม</p></div>
+          <div><span>04</span><h3>3D Models &amp; Assets</h3><p>โมเดลตัวละคร ชุดเกราะ และอาวุธสำหรับโลกของเกม</p></div>
         </div>
       </section>
 
       <section className="about shell" id="about">
-        <div><p className="eyebrow">ABOUT</p><h2>I see the<br />whole game.</h2></div>
+        <div><p className="eyebrow">05 / BEHIND THE WORLDS</p><h2>Vision first.<br /><i>Creation follows.</i></h2></div>
         <div className="aboutCopy">
-          <p>จุดแข็งที่สุดของผมคือการมองภาพรวมของเกม เห็นทั้งระบบ ประสบการณ์ผู้เล่น และทิศทางการบริหาร เพื่อนำไปสู่คำแนะนำที่ใช้งานได้จริง รองลงมาคือ Scripting ส่วน Animation และ UI สามารถทำได้ในระดับทั่วไปเพื่อให้งานครบจบในคนเดียว</p>
+          <p>ผม DoubleS Dev — จุดแข็งที่สุดคือการมองภาพรวมของเกม เห็นทั้งระบบ ประสบการณ์ผู้เล่น และทิศทางการบริหาร เพื่อนำไปสู่คำแนะนำที่ใช้งานได้จริง รองลงมาคือ Scripting และยังทำงาน 3D Model รวมถึง Animation และ UI ในระดับทั่วไป เพื่อช่วยเชื่อมภาพที่คิดไว้ให้กลายเป็นเกม</p>
           <div className="stats">
             <div><strong>01</strong><span>GAME VISION</span></div>
             <div><strong>02</strong><span>SCRIPTING</span></div>
@@ -232,11 +286,19 @@ export default function Home() {
 
       <footer className="footer" id="contact">
         <div className="shell">
-          <p className="eyebrow">LET&apos;S BUILD A BETTER GAME</p>
-          <a className="contactLink" href="mailto:godapd059@gamil.com">godapd059@gamil.com ↗</a>
-          <div className="footerMeta"><span>© 2026 DOUBLES DEV</span><span>THAILAND</span><div><a href="#work">Work</a><a href="#services">Skills</a><a href="#top">Top ↑</a></div></div>
+          <p className="eyebrow">LET&apos;S CREATE YOUR NEXT WORLD</p>
+          <a className="contactLink" href="mailto:godapd059@gamil.com">godapd059@gamil.com</a>
+          <div className="footerMeta"><span>© 2026 DOUBLES DEV</span><span>THAILAND / ROBLOX DEVELOPER</span><div><a href="#work">Work</a><a href="#services">Skills</a><a href="#top">Back to top</a></div></div>
         </div>
       </footer>
+
+      <dialog className="modelDialog" ref={modelDialogRef} onCancel={() => setActiveModel(null)} onClose={() => setActiveModel(null)} onClick={(event) => { if (event.target === event.currentTarget) setActiveModel(null); }} aria-label={activeModel?.title || 'ภาพผลงานโมเดล'}>
+        {activeModel && <div className="modelDialogInner">
+          <div className="imageDialogHeader"><span>{activeModel.category}</span><button className="modalClose" onClick={() => setActiveModel(null)} aria-label="ปิดภาพ">CLOSE ×</button></div>
+          <img src={activeModel.image} alt={activeModel.description} />
+          <div className="modalMeta"><strong>{activeModel.title}</strong><span>{activeModel.description}</span></div>
+        </div>}
+      </dialog>
 
       {activeProject && (
         <div className="modal" role="dialog" aria-modal="true" aria-label={activeProject.title} onClick={() => setActiveProject(null)}>
