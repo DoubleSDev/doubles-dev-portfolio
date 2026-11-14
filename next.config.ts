@@ -6,6 +6,7 @@ const isUserSite = repositoryName.endsWith('.github.io');
 const basePath = isGitHubPages && repositoryName && !isUserSite ? `/${repositoryName}` : '';
 
 const nextConfig: NextConfig = {
+  env: { NEXT_PUBLIC_PORTFOLIO_BASE_PATH: basePath },
   ...(isGitHubPages
     ? {
         output: 'export' as const,
