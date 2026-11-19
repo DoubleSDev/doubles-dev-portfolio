@@ -19,6 +19,9 @@ const featured: Model = {
 };
 
 const models: Model[] = [
+  { title: 'Guan Yu', file: 'guan-yu.png', category: 'Character & Weapon', alt: 'Front and back views of a green and gold armored Roblox character with a polearm.' },
+  { title: 'Miyabi', file: 'miyabi.png', category: 'Character & Outfit', alt: 'Front and back views of a dark-haired Roblox character with fox ears and a teal outfit.' },
+  { title: 'Castorise', file: 'castorise.png', category: 'Character & Outfit', alt: 'Two versions of a white-haired Roblox character in detailed white and purple dresses.' },
   { title: 'QingXaio R6', file: 'qingxaio.webp', category: 'Character & Weapons', alt: 'Front and back views of a blue-haired Roblox character with a layered outfit and floating swords.' },
   { title: 'Xaihi', file: 'astral-staff.webp', category: 'Character & Prop', alt: 'Teal-haired Roblox character in a dark pleated outfit holding a ring-topped staff.' },
   { title: 'Lavatain', file: 'crimson-blade.webp', category: 'Character & Weapon', alt: 'Red-haired Roblox character in black holding a curved orange blade.' },
